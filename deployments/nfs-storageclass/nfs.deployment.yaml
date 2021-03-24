@@ -1,0 +1,40 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: nfs-client-provisioner
+  namespace: storage
+spec:
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          image: quay.io/external_storage/nfs-client-provisioner:latest
+          resources:
+            limits:
+              cpu: 1
+              memory: 512Mi
+          volumeMounts:
+            - name: nfs-client
+              mountPath: /persistantvolumes
+          env:
+            - name: PROVISIONER_NAME
+              value: mysite.com/nfs
+            - name: NFS_SERVER
+              value: 10.10.50.250
+            - name: NFS_PATH
+              value: /volume3/kubernetes
+      volumes:
+        - name: nfs-client
+          nfs:
+            server: 10.10.50.250
+            path: /volume3/kubernetes
