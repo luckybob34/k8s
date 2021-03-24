@@ -14,22 +14,22 @@ spec:
   template:
     metadata:
       labels:
-        app: "storage-class-site"
-    spec:
-      volumes:
-        - name: storage-class-volume
-          persistentVolumeClaim:
-            claimName: nfs-pvc-1
-      containers:
-        - image: nginx
-          name: storage-class-site
-          resources:
-            limits:
-              cpu: 1
-              memory: 100Mi
-          volumeMounts:
-            - name: storage-class-volume
-              mountPath: /usr/share/nginx/html
+        app: storage-class-site
+  spec:
+    volumes:
+      - name: storage-class-volume
+        persistentVolumeClaim:
+          claimName: nfs-pvc-1
+    containers:
+      - image: nginx
+        name: storage-class-site
+        resources:
+          limits:
+            cpu: 1
+            memory: 100Mi
+        volumeMounts:
+          - name: storage-class-volume
+            mountPath: /usr/share/nginx/html
 ---
 apiVersion: v1
 kind: Service
