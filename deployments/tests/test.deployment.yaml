@@ -55,6 +55,8 @@ spec:
           - path: /
             pathType: ImplementationSpecific
             backend: 
-              serviceName: storage-class-service
-              servicePort: http
+              service
+                name: storage-class-service
+                port:
+                  number: 80
 
