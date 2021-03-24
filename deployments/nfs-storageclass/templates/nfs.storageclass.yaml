@@ -2,6 +2,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: nfs-storage
-provisioner: mysite.com/nfs
+provisioner: {{ .Values.provisioner }}
 parameters:
   archiveOnDelete: true
