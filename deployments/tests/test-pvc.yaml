@@ -4,7 +4,7 @@ metadata:
   name: nfs-pvc-1
   namespace: storage
 spec:
-  storageClass: nfs-storage
+  storageClassName: nfs-storage
   accessModes:
     - ReadWriteMany
   resources:
