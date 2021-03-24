@@ -76,3 +76,6 @@ https://metallb.universe.tf/installation/
 
 # Install nginx
 helm install nginx-ingress
+
+#nfs common tools
+sudo apt install nfs-common
