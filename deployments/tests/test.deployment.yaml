@@ -11,9 +11,6 @@ spec:
     matchLabels:
       app: storage-class-site
   template:
-    metadata:
-      labels:
-        app: storage-class-site
     spec:
       volumes:
         - name: storage-class-volume
