@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: storage-class-site
+  namespace: storage
+  name: storage-class-nginx
+spec:
+  replicas: 1
+  selector:
+    matchlabels:
+      app: storage-class-site
+  template:
+    metadata:
+      labels:
+        app: storage-class-site
+    spec:
+      volumes:
+        - name: storage-class-volume
+          persistentVolumeClaim:
+            claimName: nfs-pvc-1
+      containers:
+        - image: nginx
+          name: storage-class-site
+          resources:
+            limits:
+              cpu: 1
+              memory: 100Mi
+          volumeMounts:
+            - name: storage-class-volume
+              mountPath: /usr/share/nginx/html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storage-class-service
+  namespace: storage
+spec:
+  selector:
+    app: storage-class-site
+  ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: storage
+  name: storage-class-ingress
+spec:
+  rules:
+    - host: luckybob.cheddar.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend: 
+              serviceName: storage-class-service
+              servicePort: http
+
