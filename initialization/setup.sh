@@ -71,5 +71,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # Install CRI - Calico
 kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 
+#install metalLB
+https://metallb.universe.tf/installation/
+
 # Install nginx
 helm install nginx-ingress
