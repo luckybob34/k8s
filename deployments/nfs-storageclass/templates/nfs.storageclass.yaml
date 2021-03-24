@@ -3,5 +3,4 @@ kind: StorageClass
 metadata:
   name: nfs-storage
 provisioner: {{ .Values.provisioner }}
-parameters:
-  archiveOnDelete: true
+volumeBindingMode: WaitForFirstConsumer  
