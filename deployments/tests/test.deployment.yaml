@@ -8,7 +8,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchlables:
+    matchLabels:
       app: storage-class-site
   template:
     metadata:
