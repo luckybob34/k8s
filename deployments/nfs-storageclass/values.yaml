@@ -1,4 +1,0 @@
-nfs:
-  server: 10.10.50.250
-  path: /volume3/kubernetes
-provisioner: mysite.com/nfs
