@@ -1,0 +1,73 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+image:
+  repository: ghcr.io/linuxserver/requestrr
+  pullPolicy: IfNotPresent
+  tag: latest
+
+strategy:
+  type: Recreate
+
+env:
+  TZ: "America/Chicago"
+  PUID: 1000
+  PGID: 1000
+
+
+service:
+  port:
+    port: 4545
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    ingressClassName: "nginx"
+  hosts:
+    - host: requestrr.sweet-toast.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: sonarr-tls
+      hosts:
+       - requestrr.sweet-toast.com         
+
+probes:
+  liveness:
+    enabled: false
+    ## Set this to true if you wish to specify your own livenessProbe
+    custom: true
+    ## The spec field contains the values for the default livenessProbe.
+    ## If you selected custom: true, this field holds the definition of the livenessProbe.
+    spec:
+      exec:
+        command:
+        - /usr/bin/env
+        - bash
+        - -c
+        - curl --fail localhost:4545/api/v3/system/status?apiKey=`IFS=\> && while
+          read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi; done < /config/config.xml`
+      failureThreshold: 5
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 10
+
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    existingClaim: requestrr-config
+
+# Enable gathering Prometheus metrics
+prometheus:
+  podMonitor:
+    enabled: false

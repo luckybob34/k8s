@@ -1,0 +1,36 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: config-backup-cron
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sonarr-cron
+            image: busybox
+            imagePullPolicy: IfNotPresent
+            command:
+            - sh
+            - -c
+            - cp -a /radarr-config/. /backup/radarr/config/ && cp -a /sonarr-config/. /backup/sonarr/config/
+            volumeMounts:
+            - mountPath: /backup
+              name: backup
+            - mountPath: /sonarr-config
+              name: sonarr-config
+            - mountPath: /radarr-config
+              name: radarr-config  
+          restartPolicy: OnFailure            
+          volumes:
+            - name: backup
+              persistentVolumeClaim:
+                claimName: config-backup
+            - name: radarr-config
+              persistentVolumeClaim:
+                claimName: radarr-config      
+            - name: sonarr-config
+              persistentVolumeClaim:
+                claimName: sonarr-config                     
