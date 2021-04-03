@@ -1,0 +1,71 @@
+#
+# IMPORTANT NOTE
+#
+# This chart inherits from our common library chart. You can check the default values/options here:
+# https://github.com/k8s-at-home/library-charts/tree/main/charts/stable/common/values.yaml
+#
+
+image:
+  repository: linuxserver/bazarr
+  pullPolicy: IfNotPresent
+  tag: version-v0.9.0.5
+
+strategy:
+  type: Recreate
+
+env: {}
+  # TZ: UTC
+  # PUID: 1001
+  # PGID: 1001
+
+service:
+  port:
+    port: 6767
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  labels:
+    ingressClassName: "nginx"
+  hosts:
+    - host: bazarr.sweet-toast.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: bazarr-tls
+      hosts:
+       - bazarr.sweet-toast.com 
+
+initContainers:
+  - name: backup
+    image: busybox:1.28
+    command: ['sh', '-c', "cp -a /backup/bazarr/config/. /config/"]
+    volumeMounts:
+      - mountPath: /backup
+        name: backup
+      - mountPath: /config
+        name: config
+
+persistence:
+  config:
+    enabled: true
+    mountPath: /config
+    existingClaim: bazarr-config
+
+  backup:
+    enabled: true
+    mountPath: /backup
+    existingClaim: config-backup
+
+  media:
+    enabled: true
+    mountPath: /media
+    existingClaim: media
+
+  completed:
+    enabled: true
+    mountPath: /completed
+    existingClaim: completed
