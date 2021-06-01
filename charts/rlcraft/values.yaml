@@ -1,6 +1,6 @@
 # ref: https://hub.docker.com/r/itzg/minecraft-server/
 image: itzg/minecraft-server
-imageTag: latest
+imageTag: java8
 imagePullSecret: ""
 
 ## Configure resource requests and limits
@@ -8,8 +8,8 @@ imagePullSecret: ""
 ##
 resources:
   requests:
-    memory: 512Mi
-    cpu: 500m
+    memory: 512M
+    cpu: 1
 
 # upgrade strategy type (e.g. Recreate or RollingUpdate)
 strategyType: Recreate
@@ -72,11 +72,11 @@ minecraftServer:
   # This must be overridden, since we can't accept this for the user.
   eula: "TRUE"
   # One of: LATEST, SNAPSHOT, or a specific version (ie: "1.7.9").
-  version: "LATEST"
+  version: "1.12.2"
   # This can be one of "VANILLA", "FORGE", "SPIGOT", "BUKKIT", "PAPER", "FTBA", "SPONGEVANILLA"
-  type: "VANILLA"
+  type: "FORGE"
   # If type is set to FORGE, this sets the version; this is ignored if forgeInstallerUrl is set
-  forgeVersion:
+  forgeVersion: "14.23.5.2855"
   # If type is set to SPONGEVANILLA, this sets the version
   spongeVersion:
   # If type is set to FORGE, this sets the URL to download the Forge installer
@@ -132,15 +132,15 @@ minecraftServer:
   # One of: creative, survival, adventure, spectator
   gameMode: survival
   # Message of the Day
-  motd: "Welcome to Minecraft on Kubernetes!"
+  motd: "Welcome to RLCraft on Kubernetes!"
   # If true, enable player-vs-player damage.
-  pvp: false
+  pvp: true
   # One of: DEFAULT, FLAT, LARGEBIOMES, AMPLIFIED, CUSTOMIZED
   levelType: DEFAULT
   # When levelType == FLAT or CUSTOMIZED, this can be used to further customize map generation.
   # ref: https://hub.docker.com/r/itzg/minecraft-server/
   generatorSettings:
-  worldSaveName: world
+  worldSaveName: rlcraft
   # If set, this URL will be downloaded at startup and used as a starting point
   downloadWorldUrl:
   # force re-download of server file
@@ -164,7 +164,7 @@ minecraftServer:
   # nodePort:
   # Set the external port of the service, usefull when using the LoadBalancer service type
   servicePort: 25565
-  #loadBalancerIP: 10.10.50.212
+  loadBalancerIP: 10.10.50.213
   # loadBalancerSourceRanges: []
   ## Set the externalTrafficPolicy in the Service to either Cluster or Local
   # externalTrafficPolicy: Cluster
@@ -172,13 +172,13 @@ minecraftServer:
 
   rcon:
     # If you enable this, make SURE to change your password below.
-    enabled: true
+    enabled: false
     port: 25575
     password: "minecraft"
     existingSecret:
     secretKey: rcon-password
     serviceType: LoadBalancer
-    loadBalancerIP: 10.10.50.211
+    loadBalancerIP: 10.10.50.214
     # loadBalancerSourceRanges: []
     ## Set the externalTrafficPolicy in the Service to either Cluster or Local
     # externalTrafficPolicy: Cluster
@@ -222,10 +222,10 @@ extraEnv: {}
 persistence:
   dataDir:
     enabled: true
-    existingClaim: minecraft
+    existingClaim: rlcraft
   backup:
     enabled: true
-    mountPath: /cosmiccraft
+    mountPath: /rlcraft
     existingClaim: minecraft-backup
 
 podAnnotations: {}
