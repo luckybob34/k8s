@@ -1,6 +1,6 @@
 # ref: https://hub.docker.com/r/itzg/minecraft-server/
 image: itzg/minecraft-server
-imageTag: latest
+imageTag: java8
 imagePullSecret: ""
 
 ## Configure resource requests and limits
@@ -72,11 +72,11 @@ minecraftServer:
   # This must be overridden, since we can't accept this for the user.
   eula: "TRUE"
   # One of: LATEST, SNAPSHOT, or a specific version (ie: "1.7.9").
-  version: "1.17-pre4"
+  version: "1.16.5"
   # This can be one of "VANILLA", "FORGE", "SPIGOT", "BUKKIT", "PAPER", "FTBA", "SPONGEVANILLA"
-  type: "VANILLA"
+  type: "FABRIC"
   # If type is set to FORGE, this sets the version; this is ignored if forgeInstallerUrl is set
-  forgeVersion:
+  forgeVersion: 
   # If type is set to SPONGEVANILLA, this sets the version
   spongeVersion:
   # If type is set to FORGE, this sets the URL to download the Forge installer
@@ -132,7 +132,7 @@ minecraftServer:
   # One of: creative, survival, adventure, spectator
   gameMode: survival
   # Message of the Day
-  motd: "Welcome to 1.17 pre-4 on Kubernetes!"
+  motd: "Welcome to Origin Mod on Kubernetes!"
   # If true, enable player-vs-player damage.
   pvp: true
   # One of: DEFAULT, FLAT, LARGEBIOMES, AMPLIFIED, CUSTOMIZED
@@ -140,7 +140,7 @@ minecraftServer:
   # When levelType == FLAT or CUSTOMIZED, this can be used to further customize map generation.
   # ref: https://hub.docker.com/r/itzg/minecraft-server/
   generatorSettings:
-  worldSaveName: 117pre4
+  worldSaveName: originsmp
   # If set, this URL will be downloaded at startup and used as a starting point
   downloadWorldUrl:
   # force re-download of server file
@@ -152,7 +152,7 @@ minecraftServer:
   # Check accounts against Minecraft account service.
   onlineMode: true
   # If you adjust this, you may need to adjust resources.requests above to match.
-  memory: 2048M
+  memory: 4096M
   # General JVM options to be passed to the Minecraft server invocation
   jvmOpts: ""
   # Options like -X that need to proceed general JVM options
@@ -164,7 +164,7 @@ minecraftServer:
   # nodePort:
   # Set the external port of the service, usefull when using the LoadBalancer service type
   servicePort: 25565
-  loadBalancerIP: 10.10.50.213
+  loadBalancerIP: 10.10.50.214
   # loadBalancerSourceRanges: []
   ## Set the externalTrafficPolicy in the Service to either Cluster or Local
   # externalTrafficPolicy: Cluster
@@ -222,10 +222,10 @@ extraEnv: {}
 persistence:
   dataDir:
     enabled: true
-    existingClaim: rlcraft
+    existingClaim: sky-mc
   backup:
     enabled: true
-    mountPath: /rlcraft
+    mountPath: /sky-mc
     existingClaim: minecraft-backup
 
 podAnnotations: {}
